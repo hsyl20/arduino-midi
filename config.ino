@@ -14,7 +14,8 @@ uint8_t transferSysEx = 0;
  */
 
 uint8_t onControlChange(uint8_t channel, uint8_t ctrl, uint8_t value) {
-   if (ctrl == 0 || ctrl == 32) {
+   // Only keep the expression soufflet
+   if (ctrl != 11) {
       return 0;
    }
 
@@ -28,11 +29,13 @@ static int8_t last_active_set = -1;
 
 static int8_t active_patch[NPATCHSET] = 
    { -1, -1, -1, -1};
+   
 static uint8_t patches[NPATCHSET][NPATCH][3] =
    { { {64, 4, 21} // accordion fr
      , {50, 4, 65} // BlowAltoSib
      }
-   , { {15, 5, 81} // Porta Lead
+   , { // {15, 5, 81} // Porta Lead
+       {53, 4, 21} // Fr. Musette
      , {16, 4, 48} // Strings
      }
    , { {0 , 4, 11} // Vibraphone
@@ -168,19 +171,19 @@ uint8_t onNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
       switch (right_mode) {
          case MODE_UPPER: return 1;
          case MODE_ORCH:
-            switch (note) {
-            case 57: ea7_set_ending(1); return 0;
-            case 60: ea7_set_ending(2); return 0;
-            case 63: ea7_set_ending(3); return 0;
-            case 66: ea7_set_ending(4); return 0;
+            switch (note % 12) {
+            case (57 % 12): ea7_set_ending(1); return 0;
+            case (60 % 12): ea7_set_ending(2); return 0;
+            case (63 % 12): ea7_set_ending(3); return 0;
+            case (66 % 12): ea7_set_ending(4); return 0;
             default: return 0;
             }
          case MODE_ORGAN:
-            switch (note) {
-            case 57: ea7_set_intro(1); return 0;
-            case 60: ea7_set_intro(2); return 0;
-            case 63: ea7_set_intro(3); return 0;
-            case 66: ea7_set_intro(4); return 0;
+            switch (note % 12) {
+            case (57 % 12): ea7_set_intro(1); return 0;
+            case (60 % 12): ea7_set_intro(2); return 0;
+            case (63 % 12): ea7_set_intro(3); return 0;
+            case (66 % 12): ea7_set_intro(4); return 0;
             default: return 0;
             }
       }

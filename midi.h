@@ -21,6 +21,9 @@ void redLightOff();
 void greenLightOn();
 void greenLightOff();
 
+#define isStatusByte(b) ((b & 0x80) == 0x80)
+#define isSystemMessage(b) ((b & 0xF0) == 0xF0)
+#define isSystemRealtimeMessage(b) ((b & 0xF8) == 0xF8)
 
 
 #endif
